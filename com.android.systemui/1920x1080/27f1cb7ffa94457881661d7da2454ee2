@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Root>
+    <Scene opacity="0" width="1599" rotateAngle="0" height="899" id="com.android.systemui" horizonFlag="1">
+        <Item pos="1096,184" width="68" type="9" height="48" macro="size 1920 1080HUAN_HANGslide 1518 259 1518 1000" clicked_tip="">
+            <Key modifier_value="0" keyLevel="" value="114" keyString="F3" description="">
+                <Point>1120,208</Point>
+            </Key>
+        </Item>
+        <Item pos="1135,53" width="48" finger_count="1" type="1" height="48" clicked_tip="">
+            <Key modifier_value="0" keyLevel="" value="65" keyString="A" description="">
+                <Point>1159,77</Point>
+            </Key>
+        </Item>
+    </Scene>
+</Root>

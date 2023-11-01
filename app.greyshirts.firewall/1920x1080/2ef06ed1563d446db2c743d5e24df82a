@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Root>
+    <Scene rotateAngle="0" horizonFlag="1" opacity="0" id="app.greyshirts.firewall" width="1599" height="899">
+        <Item finger_count="1" type="1" pos="753,203" width="48" clicked_tip="" height="48">
+            <Key modifier_value="0" keyString="A" keyLevel="" value="65" description="">
+                <Point>777,227</Point>
+            </Key>
+        </Item>
+        <Item finger_count="1" type="1" pos="761,536" width="48" clicked_tip="" height="48">
+            <Key modifier_value="0" keyString="B" keyLevel="" value="66" description="">
+                <Point>785,560</Point>
+            </Key>
+        </Item>
+        <Item finger_count="1" type="1" pos="212,817" width="48" clicked_tip="" height="48">
+            <Key modifier_value="0" keyString="C" keyLevel="" value="67" description="">
+                <Point>236,841</Point>
+            </Key>
+        </Item>
+    </Scene>
+</Root>

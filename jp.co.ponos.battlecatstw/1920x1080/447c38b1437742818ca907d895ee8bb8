@@ -1,0 +1,266 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Root>
+    <Scene height="899" width="1599" opacity="0" horizonFlag="1" id="jp.co.ponos.battlecatstw" rotateAngle="0">
+        <Item height="48" width="48" clicked_tip="" pos="758,517" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="A" keyLevel="" value="65">
+                <Point>782,541</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="1118,578" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="B" keyLevel="" value="66">
+                <Point>1142,602</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="480,637" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="C" keyLevel="" value="67">
+                <Point>504,661</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="780,5" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="D" keyLevel="" value="68">
+                <Point>804,29</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="1314,98" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="E" keyLevel="" value="69">
+                <Point>1338,122</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="1162,125" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="F" keyLevel="" value="70">
+                <Point>1186,149</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="1242,546" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="G" keyLevel="" value="71">
+                <Point>1266,570</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="332,572" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="H" keyLevel="" value="72">
+                <Point>356,596</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="1348,777" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="I" keyLevel="" value="73">
+                <Point>1372,801</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="250,622" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="J" keyLevel="" value="74">
+                <Point>274,646</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="1266,555" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="Z" keyLevel="" value="90">
+                <Point>1290,579</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="145,532" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="Y" keyLevel="" value="89">
+                <Point>169,556</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="233,534" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="X" keyLevel="" value="88">
+                <Point>257,558</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="322,536" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="W" keyLevel="" value="87">
+                <Point>346,560</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="427,531" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="V" keyLevel="" value="86">
+                <Point>451,555</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="511,547" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="U" keyLevel="" value="85">
+                <Point>535,571</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="594,544" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="T" keyLevel="" value="84">
+                <Point>618,568</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="924,530" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="S" keyLevel="" value="83">
+                <Point>948,554</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="1011,544" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="R" keyLevel="" value="82">
+                <Point>1035,568</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="1099,542" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="Q" keyLevel="" value="81">
+                <Point>1123,566</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="1187,541" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="P" keyLevel="" value="80">
+                <Point>1211,565</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="1337,286" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="K" keyLevel="" value="75">
+                <Point>1361,310</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="522,448" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="=" keyLevel="" value="187">
+                <Point>546,472</Point>
+            </Key>
+        </Item>
+        <Item height="80" switch_status="0" width="128" clicked_tip="" data1="0" pos="399,265" data2="0" type="29" slider="40" right_move_stop="0" finger_count="1">
+            <Key description="" modifier_value="0" keyString="-" keyLevel="" value="189">
+                <Point>788,316</Point>
+                <Point>787,316</Point>
+                <Point>785,316</Point>
+                <Point>782,316</Point>
+                <Point>778,315</Point>
+                <Point>774,315</Point>
+                <Point>764,314</Point>
+                <Point>751,314</Point>
+                <Point>737,313</Point>
+                <Point>730,313</Point>
+                <Point>722,312</Point>
+                <Point>716,312</Point>
+                <Point>707,311</Point>
+                <Point>696,310</Point>
+                <Point>685,309</Point>
+                <Point>675,309</Point>
+                <Point>667,309</Point>
+                <Point>657,308</Point>
+                <Point>645,307</Point>
+                <Point>633,305</Point>
+                <Point>620,304</Point>
+                <Point>610,303</Point>
+                <Point>601,302</Point>
+                <Point>593,302</Point>
+                <Point>588,301</Point>
+                <Point>584,301</Point>
+                <Point>580,300</Point>
+                <Point>577,300</Point>
+                <Point>572,300</Point>
+                <Point>569,300</Point>
+                <Point>563,300</Point>
+                <Point>555,300</Point>
+                <Point>548,299</Point>
+                <Point>540,299</Point>
+                <Point>538,299</Point>
+                <Point>532,299</Point>
+                <Point>526,299</Point>
+                <Point>523,299</Point>
+                <Point>518,299</Point>
+                <Point>514,299</Point>
+                <Point>512,299</Point>
+                <Point>510,299</Point>
+                <Point>509,299</Point>
+                <Point>507,299</Point>
+                <Point>506,299</Point>
+                <Point>504,300</Point>
+                <Point>502,300</Point>
+                <Point>498,301</Point>
+                <Point>495,301</Point>
+                <Point>492,302</Point>
+                <Point>488,303</Point>
+                <Point>485,303</Point>
+                <Point>482,303</Point>
+                <Point>481,303</Point>
+                <Point>480,303</Point>
+                <Point>479,303</Point>
+                <Point>478,303</Point>
+                <Point>477,303</Point>
+                <Point>476,304</Point>
+                <Point>474,304</Point>
+                <Point>473,304</Point>
+                <Point>471,304</Point>
+                <Point>469,305</Point>
+                <Point>468,305</Point>
+                <Point>467,305</Point>
+            </Key>
+        </Item>
+        <Item height="80" switch_status="0" width="128" clicked_tip="" data1="0" pos="1099,535" data2="0" type="29" slider="85" right_move_stop="0" finger_count="1">
+            <Key description="" modifier_value="0" keyString="~" keyLevel="" value="192">
+                <Point>984,568</Point>
+                <Point>985,568</Point>
+                <Point>990,567</Point>
+                <Point>996,567</Point>
+                <Point>1003,567</Point>
+                <Point>1010,566</Point>
+                <Point>1018,566</Point>
+                <Point>1026,565</Point>
+                <Point>1031,565</Point>
+                <Point>1038,565</Point>
+                <Point>1043,565</Point>
+                <Point>1047,565</Point>
+                <Point>1052,565</Point>
+                <Point>1054,565</Point>
+                <Point>1058,565</Point>
+                <Point>1059,565</Point>
+                <Point>1061,565</Point>
+                <Point>1065,565</Point>
+                <Point>1067,565</Point>
+                <Point>1069,565</Point>
+                <Point>1072,565</Point>
+                <Point>1074,565</Point>
+                <Point>1075,565</Point>
+                <Point>1078,565</Point>
+                <Point>1082,565</Point>
+                <Point>1086,564</Point>
+                <Point>1089,564</Point>
+                <Point>1090,564</Point>
+                <Point>1092,564</Point>
+                <Point>1094,564</Point>
+                <Point>1096,564</Point>
+                <Point>1098,564</Point>
+                <Point>1100,564</Point>
+                <Point>1105,564</Point>
+                <Point>1108,564</Point>
+                <Point>1111,564</Point>
+                <Point>1112,564</Point>
+                <Point>1115,564</Point>
+                <Point>1117,564</Point>
+                <Point>1118,564</Point>
+                <Point>1119,564</Point>
+                <Point>1120,564</Point>
+                <Point>1121,565</Point>
+                <Point>1123,565</Point>
+                <Point>1127,566</Point>
+                <Point>1135,568</Point>
+                <Point>1138,569</Point>
+                <Point>1140,570</Point>
+                <Point>1141,570</Point>
+                <Point>1142,571</Point>
+                <Point>1143,571</Point>
+                <Point>1144,571</Point>
+                <Point>1145,571</Point>
+                <Point>1146,571</Point>
+                <Point>1148,571</Point>
+                <Point>1150,572</Point>
+                <Point>1152,572</Point>
+                <Point>1155,573</Point>
+                <Point>1158,574</Point>
+                <Point>1161,574</Point>
+                <Point>1164,575</Point>
+                <Point>1165,575</Point>
+                <Point>1167,575</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="1118,671" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="," keyLevel="" value="188">
+                <Point>1142,695</Point>
+            </Key>
+        </Item>
+        <Item height="48" width="48" clicked_tip="" pos="852,716" type="1" finger_count="1">
+            <Key description="" modifier_value="0" keyString="/" keyLevel="" value="191">
+                <Point>876,740</Point>
+            </Key>
+        </Item>
+    </Scene>
+</Root>
