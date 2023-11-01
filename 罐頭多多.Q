@@ -99,7 +99,7 @@ Function corruptRecovery(hwndChild, hwnd)
 	
 	deadline = deadline + 1
 	
-	If deadline = 2 Then 
+	If deadline = 3 Then 
 		Call click(116, 1500, hwndChild) // restart android
 		Delay 30000 // wait 30 seconds to restart
 		deadline = 0
