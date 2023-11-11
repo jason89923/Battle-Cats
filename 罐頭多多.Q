@@ -9,7 +9,7 @@ StopHotkeyMod=0
 RunOnce=1
 EnableWindow=
 MacroID=266428d5-695c-4a50-8169-9be8f58e7852
-Description=罐頭多多_oreo
+Description=罐頭多多_jason
 Enable=1
 AutoRun=0
 [Repeat]
@@ -266,19 +266,19 @@ Function keepLargest(hwndChild, hwnd, max, min)
     Rem e
     
     i = 0
-    While threePointCheck(633,716, "00C1FF", 825,743, "00BEFB", 720,760, "FFFFFF", 400, hwnd) // 判斷是否出現離隊確認彈窗
+    While threePointCheck(633,716, "00C1FF", 825,743, "00BEFB", 720,760, "FFFFFF", 100, hwnd) // 判斷是否出現離隊確認彈窗
     	Call click(72, 0, hwndChild)// 離隊
     	i = i + 1
-    	If i = 5 Then 
-    			Goto endFunction
+    	If i = 20 Then 
+    		Goto endFunction
     	End If
     Wend
     
     i = 0
-    While threePointCheck(1735,176, "42CFFF", 1716,162, "FFFFFF", 1779,175, "E2E2E2", 300, hwnd) // 判斷是否回到加碼多多原始頁面
+    While threePointCheck(1735,176, "42CFFF", 1716,162, "FFFFFF", 1779,175, "E2E2E2", 100, hwnd) // 判斷是否回到加碼多多原始頁面
     	Call click(67, 0, hwndChild)// 是
     	i = i + 1
-    	If i = 10 Then 
+    	If i = 20 Then 
     		Goto endFunction
     	End If
     Wend
@@ -287,11 +287,12 @@ Function keepLargest(hwndChild, hwnd, max, min)
 	Rem endFunction
 End Function
 
-Function main(name, max, min)
+Function main(name, min)
 	hwnd = Plugin.Window.Find("Qt5QWindowIcon", name)
 	hwndChild = findInputHwnd(hwnd)
+	max = 5
 	vpnCounter = 0
-	vpnMAX = 15
+	vpnMAX = 50
 	
 	While True
 		Rem start
@@ -522,9 +523,13 @@ Function main(name, max, min)
 			i = i + 1
 		Wend
 		
+		is_new_member = False
 		i = 0
 		While threePointCheck(1720,162, "FFFFFF", 1731,178, "42CEFF", 1746,199, "42CEFE", 50, hwnd) // 換裝
 			Call click(69, 0, hwndChild)// 領取獎勵
+			If threePointCheck(969, 233, "FFFFFF", 934, 228, "FFFFFF", 909, 231, "FFFFFF", 0, hwnd) = False Then // 判斷是否出現新隊員提示
+				is_new_member = True
+			End If
 			
 			If i >= 50 Then 
 				Call corruptRecovery(hwndChild, hwnd)
@@ -533,6 +538,39 @@ Function main(name, max, min)
 			End If
 			i = i + 1
 		Wend
+		
+		If min = 5 and is_new_member Then // 如果已經全傳說隊員，並且發現新隊員，就直接踢掉
+			i = 0
+			While threePointCheck(315,701, "00C2FF", 479,706, "00C2FF", 484,733, "00A0DC", 50, hwnd) // 離隊按鈕
+				Call click(220, 0, hwndChild)// 嘗試抓到新進隊員
+				
+				If i >= 50 Then 
+					Goto restart11 // 繼續原本的流程
+				End If
+				i = i + 1
+			Wend
+			
+			i = 0
+			While threePointCheck(633,716, "00C1FF", 825,743, "00BEFB", 720,760, "FFFFFF", 100, hwnd) // 判斷是否出現離隊確認彈窗
+    			Call click(72, 0, hwndChild)// 離隊
+    			i = i + 1
+    			If i = 20 Then 
+    				Goto restart11
+    			End If
+    		Wend
+    		
+    		i = 0
+    		While threePointCheck(1735,176, "42CFFF", 1716,162, "FFFFFF", 1779,175, "E2E2E2", 100, hwnd) // 判斷是否回到加碼多多原始頁面
+    			Call click(67, 0, hwndChild)// 是
+    			i = i + 1
+    			If i = 20 Then 
+    				Goto restart11
+    			End If
+    		Wend
+    		
+			Delay 400
+			
+		End If
 		
 		Rem restart11
 		If vpnCounter = vpnMAX Then 
@@ -564,17 +602,5 @@ Function main(name, max, min)
 	Wend
 End Function
 
-Sub thread1
-	Call main("gugu", 5, 1)
-End Sub
 
-Sub thread2
-	Call main("SOP", 5, 5)
-End Sub
-
-Sub thread3
-	Call main("jason", 5, 5)
-End Sub
-
-
-Call main("oreo", 5, 3)
+Call main("jason", 5) // 0(白) ~ 4(傳說)，小於給定等級就會馬上被踢，5表示啟用隨到隨踢
