@@ -1,6 +1,7 @@
 import subprocess
 import time
 import win32gui
+import win32con
 import argparse
 
 
@@ -27,10 +28,27 @@ def send_command(command=[], preDelay=0):
         # 構建設置日期和時間的命令
         adb_date_cmd = [ADB_TOOL_PATH, "-s", f"{TAG}", *command]
         # 執行命令
-        subprocess.run(adb_date_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    except subprocess.CalledProcessError as e:
-        pass
-
+        subprocess.run(adb_date_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=1)
+    except Exception as e:
+        corruptRecovery(need_reboot=True)
+        
+def adb_ready():
+    for i in range(60):
+        result = subprocess.run([ADB_TOOL_PATH, 'devices'], stdout=subprocess.PIPE, text=True)
+        lines = result.stdout.strip().split('\n')[1:]
+        state = None
+        for line in lines:
+            if TAG in line:
+               name, state = line.split()
+               break
+        print(f'第{i}秒狀態: {state}')
+        if state == 'device':
+            return
+        delay(1000)
+        
+    # 不得已才重啟ADB
+    subprocess.run([ADB_TOOL_PATH, 'kill-server'])
+    subprocess.run([ADB_TOOL_PATH, 'start-server'])
 
 class App_base:
     def __init__(self):
@@ -41,7 +59,7 @@ class App_base:
 
 
 class System(App_base):
-    reboot = ["reboot"]
+    reboot = ['shell', 'reboot']
 
 
 class Cat(App_base):
@@ -114,12 +132,16 @@ class BKWindow:
         self._hwnd = win32gui.FindWindow(None, WindowsName)
         if self._hwnd == 0:
             raise ValueError("WindowsNanme Not Found")
+        self.maximize()
 
     def getColor(self, x, y):
         hwndDC = win32gui.GetWindowDC(self._hwnd)
         ret = win32gui.GetPixel(hwndDC, x, y)
         win32gui.ReleaseDC(self._hwnd, hwndDC)
         return "{:06x}".format(ret & 0xffffff).upper()
+    
+    def maximize(self):
+        win32gui.ShowWindow(self._hwnd, win32con.SW_MAXIMIZE)
 
 
 class Triple_Pixel_Info:
@@ -146,7 +168,7 @@ COLOR_MAP = {
     '銅色隊員': Triple_Pixel_Info((1074,679), '436CD2', (933,213), '2267CD', (966,197), '3D66BF'), #ok
     '銀色隊員': Triple_Pixel_Info((939,193),  'B9B19F', (970,199),  'AFA18D', (933,215),  'B9B19F'), #ok
     '鑽石隊員': Triple_Pixel_Info((912,211), 'C3EDCC', (956,195), 'EFE9F1', (966,212), '9FB4CB'), #ok
-    '新隊員提示': Triple_Pixel_Info((908,263), "FFFFFF", (932,280), "FFFFFF", (968,268), "FFFFFF"),#ok
+    '新隊員提示': Triple_Pixel_Info((963,233), "FFFFFF", (907,235), "FFFFFF", (957,245), "FFFFFF"),#ok
     'skip畫面': Triple_Pixel_Info((1589,935),  '00C1FF', (1591,999),  '0095CF', (1763,977),  '00ACE8'),  #ok
     'VPN': Triple_Pixel_Info((232, 133), '2155FA', (232, 124), '2155FA', (240, 123), '2155FA'),  #ok
     'VPN背景': Triple_Pixel_Info((555, 111),  '889600', (685, 115),  '889600', (933, 124),  '889600'),  #ok
@@ -172,20 +194,19 @@ class Check_Pixel_Info:
                 return False
             delay(10)
         return True
+    
+    def update_window(self):
+        self.window = BKWindow(WINDOW_NAME)
 
 
 check_Pixel_Info = Check_Pixel_Info()
 
-def corruptRecovery():
-    deadline = 0
+def corruptRecovery(need_reboot=False):
 
-    deadline = deadline + 1
-
-    if deadline == 3:
+    if need_reboot:
         send_command(Commands.App.System.reboot)
-        delay(100000)  # wait 30 seconds to restart
-        deadline = 0
-        delay(100)
+        adb_ready()
+        check_Pixel_Info.update_window()
 
     send_command(Commands.App.CAT.kill)
     send_command(Commands.App.VPN.kill)
@@ -342,7 +363,7 @@ if __name__ == '__main__':
             send_command(Commands.App.VPN.click('switch'))
             send_command(Commands.Time.set_date)
             send_command(Commands.App.CAT.open)
-            send_command(Commands.App.VPN.open, 200)
+            send_command(Commands.App.VPN.open, 600)
             send_command(Commands.Time.auto_get_date_off)
             send_command(Commands.Time.auto_get_date_on)
             send_command(Commands.App.VPN.click('switch'))
