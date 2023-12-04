@@ -6,13 +6,12 @@ import argparse
 
 
 argparser = argparse.ArgumentParser()
-argparser.add_argument('-p', '--port', type=str, default='5560')
-argparser.add_argument('-w', '--window', type=str, default='SOP')
+argparser.add_argument('-p', '--port', type=str, default='5556')
+argparser.add_argument('-w', '--window', type=str, default='jason')
 argparser.add_argument('-t', '--threshold', type=int, default=5)
 
 ADB_TOOL_PATH = "adb"
-TAG = 'emulator-5562'
-PORT = argparser.parse_args().port
+TAG = f'emulator-{argparser.parse_args().port}'
 WINDOW_NAME = argparser.parse_args().window
 # 0(白) ~ 4(傳說)，小於給定等級就會馬上被踢，5表示啟用隨到隨踢功能
 member_level_threshold = argparser.parse_args().threshold
@@ -33,7 +32,7 @@ def send_command(command=[], preDelay=0):
         corruptRecovery(need_reboot=True)
         
 def adb_ready():
-    for i in range(60):
+    for i in range(0):
         result = subprocess.run([ADB_TOOL_PATH, 'devices'], stdout=subprocess.PIPE, text=True)
         lines = result.stdout.strip().split('\n')[1:]
         state = None
@@ -205,6 +204,7 @@ def corruptRecovery(need_reboot=False):
 
     if need_reboot:
         send_command(Commands.App.System.reboot)
+        delay(10000)
         adb_ready()
         check_Pixel_Info.update_window()
 
@@ -309,6 +309,7 @@ def keepLargest():
 
 
 if __name__ == '__main__':
+    adb_ready()
     error = False
     counter = 0
     start_time = time.time()
@@ -363,7 +364,7 @@ if __name__ == '__main__':
             send_command(Commands.App.VPN.click('switch'))
             send_command(Commands.Time.set_date)
             send_command(Commands.App.CAT.open)
-            send_command(Commands.App.VPN.open, 600)
+            send_command(Commands.App.VPN.open, 1000)
             send_command(Commands.Time.auto_get_date_off)
             send_command(Commands.Time.auto_get_date_on)
             send_command(Commands.App.VPN.click('switch'))
@@ -391,7 +392,7 @@ if __name__ == '__main__':
                 while check_Pixel_Info.check('離隊彈窗'):  # 離隊按鈕
                     send_command(Commands.App.CAT.click('新隊員'))  # 嘗試抓到新進隊員
 
-                    if i >= 100:
+                    if i >= 70:
                         raise Exception('keep going')  # 繼續原本的流程
                     i = i + 1
 
