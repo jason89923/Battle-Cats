@@ -32,7 +32,9 @@ def send_command(command=[], preDelay=0):
         corruptRecovery(need_reboot=True)
         
 def adb_ready():
-    for i in range(0):
+    subprocess.run([ADB_TOOL_PATH, 'kill-server'])
+    subprocess.run([ADB_TOOL_PATH, 'start-server'])
+    for i in range(30):
         result = subprocess.run([ADB_TOOL_PATH, 'devices'], stdout=subprocess.PIPE, text=True)
         lines = result.stdout.strip().split('\n')[1:]
         state = None
@@ -44,10 +46,7 @@ def adb_ready():
         if state == 'device':
             return
         delay(1000)
-        
-    # 不得已才重啟ADB
-    subprocess.run([ADB_TOOL_PATH, 'kill-server'])
-    subprocess.run([ADB_TOOL_PATH, 'start-server'])
+    
 
 class App_base:
     def __init__(self):
@@ -154,6 +153,7 @@ class Triple_Pixel_Info:
 
 
 COLOR_MAP = {
+    '加碼多多黑畫面': Triple_Pixel_Info((395,173),  '000000', (777,181),  '000000', (1364,181),  '000000'),
     '加碼多多圖示': Triple_Pixel_Info((415, 764), "FFFFFF", (404, 764), "FFFFFF", (332, 732), "363636"),
     '加碼多多鈴鐺': Triple_Pixel_Info((1580, 91), "FFFFFF", (1586, 84), "FFFFFF", (1591, 87), "FFFFFF"),
     '加碼多多換裝': Triple_Pixel_Info((1715, 167), "FFFFFF", (1764, 175), "FFFFFF", (1727, 201), "42CEFF"),
@@ -204,18 +204,21 @@ def corruptRecovery(need_reboot=False):
 
     if need_reboot:
         send_command(Commands.App.System.reboot)
-        delay(10000)
         adb_ready()
         check_Pixel_Info.update_window()
+        
+    for i in range(3):
 
-    send_command(Commands.App.CAT.kill)
-    send_command(Commands.App.VPN.kill)
+        send_command(Commands.App.CAT.kill)
+        send_command(Commands.App.VPN.kill)
 
-    send_command(Commands.Time.auto_get_date_off)
-    send_command(Commands.Time.auto_get_date_on)
+        send_command(Commands.Time.auto_get_date_off)
+        send_command(Commands.Time.auto_get_date_on)
 
-    send_command(Commands.App.VPN.open)
-    send_command(Commands.App.CAT.open)
+        send_command(Commands.App.VPN.open)
+        send_command(Commands.App.CAT.open)
+        if check_Pixel_Info.check_response('加碼多多黑畫面'):
+            break
 
     for i in range(5):
         send_command(Commands.App.CAT.click('skip'), 300)
