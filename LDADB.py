@@ -204,6 +204,7 @@ def corruptRecovery(need_reboot=False):
 
     if need_reboot:
         send_command(Commands.App.System.reboot)
+        delay(7000)
         adb_ready()
         check_Pixel_Info.update_window()
         
@@ -217,7 +218,7 @@ def corruptRecovery(need_reboot=False):
 
         send_command(Commands.App.VPN.open)
         send_command(Commands.App.CAT.open)
-        if check_Pixel_Info.check_response('加碼多多黑畫面'):
+        if not check_Pixel_Info.check_response('加碼多多黑畫面'):
             break
 
     for i in range(5):
