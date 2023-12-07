@@ -4,6 +4,51 @@ import win32gui
 import win32con
 import argparse
 import json
+import threading
+import discord
+import asyncio
+from datetime import datetime
+
+
+TOKEN = ""
+
+CURRENT_CHANNEL = '二號機'
+CHANNEL = {'一號機': 1181625760222543883, '二號機': 1182266933018628136, '三號機': 1182266968749899807}
+
+
+
+intents = discord.Intents.default()
+client = discord.Client(intents=intents)
+
+async def monitor_event_and_send_message(channel):
+    await channel.send(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - {CURRENT_CHANNEL}已就緒")
+    # 監控邏輯
+    while not client.is_closed():
+        if condition_is_met():
+            await channel.send(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} - {CURRENT_CHANNEL}超過 4 分鐘沒有回應，請盡快處理')
+        await asyncio.sleep(240)
+
+def condition_is_met():
+    if time.time() - last_success_time > 240:
+        return True
+    return False
+
+@client.event
+async def on_ready():
+    print(f'Logged in as {client.user}')
+    channel = client.get_channel(CHANNEL[CURRENT_CHANNEL])  # 用實際的頻道 ID 替換
+    client.loop.create_task(monitor_event_and_send_message(channel))
+
+
+def start():
+    client.run(TOKEN)  # 用您的 Bot 令牌替換
+
+
+last_success_time = time.time()
+
+bot_thread = threading.Thread(target=start)
+bot_thread.daemon = True  # 将线程设置为守护线程
+bot_thread.start()
 
 
 argparser = argparse.ArgumentParser()
@@ -444,6 +489,7 @@ if __name__ == '__main__':
             if e.args[0] != 'keep going':
                 error = True
         if not error:
+            last_success_time = time.time()
             print(f'第 {counter} 次執行耗時： {time.time() - start_time:.3f}s')
             start_time = time.time()
             counter += 1
