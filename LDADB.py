@@ -3,18 +3,21 @@ import time
 import win32gui
 import win32con
 import argparse
+import json
 
 
 argparser = argparse.ArgumentParser()
 argparser.add_argument('-p', '--port', type=str, default='5556')
 argparser.add_argument('-w', '--window', type=str, default='jason')
 argparser.add_argument('-t', '--threshold', type=int, default=5)
+argparser.add_argument('-c', '--config', type=str, default='')
 
 ADB_TOOL_PATH = "adb"
 TAG = f'emulator-{argparser.parse_args().port}'
 WINDOW_NAME = argparser.parse_args().window
 # 0(白) ~ 4(傳說)，小於給定等級就會馬上被踢，5表示啟用隨到隨踢功能
 member_level_threshold = argparser.parse_args().threshold
+CONFIG = argparser.parse_args().config
 
 
 def delay(milliseconds):
@@ -150,29 +153,50 @@ class Triple_Pixel_Info:
         self.color2 = color2
         self.coord3 = coord3
         self.color3 = color3
+    
+    @staticmethod
+    def encode(obj):
+        if isinstance(obj, Triple_Pixel_Info):
+            return {
+                "coord1": obj.coord1,
+                "color1": obj.color1,
+                "coord2": obj.coord2,
+                "color2": obj.color2,
+                "coord3": obj.coord3,
+                "color3": obj.color3
+            }
+        raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
+        
+    @staticmethod
+    def to_obj(d):
+        return Triple_Pixel_Info(d['coord1'], d['color1'], d['coord2'], d['color2'], d['coord3'], d['color3'])
 
-
-COLOR_MAP = {
-    '加碼多多黑畫面': Triple_Pixel_Info((395,173),  '000000', (777,181),  '000000', (1364,181),  '000000'),
-    '加碼多多圖示': Triple_Pixel_Info((415, 764), "FFFFFF", (404, 764), "FFFFFF", (332, 732), "363636"),
-    '加碼多多鈴鐺': Triple_Pixel_Info((1580, 91), "FFFFFF", (1586, 84), "FFFFFF", (1591, 87), "FFFFFF"),
-    '加碼多多換裝': Triple_Pixel_Info((1715, 167), "FFFFFF", (1764, 175), "FFFFFF", (1727, 201), "42CEFF"),
-    '喵力達': Triple_Pixel_Info((835,678), '3963C9', (953,683), '2E509B', (1074,679), '436CD2'),
-    '6小時深度探險按鈕': Triple_Pixel_Info((1008, 650),  '00C2FF', (1143, 696),  'EDEDED', (1303, 700), '00A2DE'),
-    '確認出發(是)': Triple_Pixel_Info((637, 719), '00C1FF', (792, 734),  '00BFFF', (801, 779),  '0097D1'),
-    '滿員彈窗': Triple_Pixel_Info((753,496),  '8F9699', (947,520),  'FBFBFB', (1007,554),  'F7F8F8'),#ok
-    '離隊彈窗': Triple_Pixel_Info((493,699), '00C2FF', (339,692), '00C2FF', (344,726), '00A5E0'),#ok
-    '離隊確認彈窗': Triple_Pixel_Info((643,728), '00C1FF', (645,770), '009FDA', (781,772), '009ED9'),#ok
-    '白色隊員': Triple_Pixel_Info((941,193), "FFFFFF", (931,216), "FFFFFF", (968,200), "FFFFFF"), #ok
-    '銅色隊員': Triple_Pixel_Info((1074,679), '436CD2', (933,213), '2267CD', (966,197), '3D66BF'), #ok
-    '銀色隊員': Triple_Pixel_Info((939,193),  'B9B19F', (970,199),  'AFA18D', (933,215),  'B9B19F'), #ok
-    '鑽石隊員': Triple_Pixel_Info((912,211), 'C3EDCC', (956,195), 'EFE9F1', (966,212), '9FB4CB'), #ok
-    '新隊員提示': Triple_Pixel_Info((963,233), "FFFFFF", (907,235), "FFFFFF", (957,245), "FFFFFF"),#ok
-    'skip畫面': Triple_Pixel_Info((1589,935),  '00C1FF', (1591,999),  '0095CF', (1763,977),  '00ACE8'),  #ok
-    'VPN': Triple_Pixel_Info((232, 133), '2155FA', (232, 124), '2155FA', (240, 123), '2155FA'),  #ok
-    'VPN背景': Triple_Pixel_Info((555, 111),  '889600', (685, 115),  '889600', (933, 124),  '889600'),  #ok
-    'VPN正常': Triple_Pixel_Info((149,116), 'FFFFFF', (148,131), '889600', (132,136), 'FFFFFF')
-}
+if CONFIG == '':
+    COLOR_MAP = {
+        '加碼多多黑畫面': Triple_Pixel_Info((395,173),  '000000', (777,181),  '000000', (1364,181),  '000000'),
+        '加碼多多圖示': Triple_Pixel_Info((415, 764), "FFFFFF", (404, 764), "FFFFFF", (332, 732), "363636"),
+        '加碼多多鈴鐺': Triple_Pixel_Info((1580, 91), "FFFFFF", (1586, 84), "FFFFFF", (1591, 87), "FFFFFF"),
+        '加碼多多換裝': Triple_Pixel_Info((1715, 167), "FFFFFF", (1764, 175), "FFFFFF", (1727, 201), "42CEFF"),
+        '喵力達': Triple_Pixel_Info((835,678), '3963C9', (953,683), '2E509B', (1074,679), '436CD2'),
+        '6小時深度探險按鈕': Triple_Pixel_Info((1008, 650),  '00C2FF', (1143, 696),  'EDEDED', (1303, 700), '00A2DE'),
+        '確認出發(是)': Triple_Pixel_Info((637, 719), '00C1FF', (792, 734),  '00BFFF', (801, 779),  '0097D1'),
+        '滿員彈窗': Triple_Pixel_Info((753,496),  '8F9699', (947,520),  'FBFBFB', (1007,554),  'F7F8F8'),#ok
+        '離隊彈窗': Triple_Pixel_Info((493,699), '00C2FF', (339,692), '00C2FF', (344,726), '00A5E0'),#ok
+        '離隊確認彈窗': Triple_Pixel_Info((643,728), '00C1FF', (645,770), '009FDA', (781,772), '009ED9'),#ok
+        '白色隊員': Triple_Pixel_Info((941,193), "FFFFFF", (931,216), "FFFFFF", (968,200), "FFFFFF"), #ok
+        '銅色隊員': Triple_Pixel_Info((1074,679), '436CD2', (933,213), '2267CD', (966,197), '3D66BF'), #ok
+        '銀色隊員': Triple_Pixel_Info((939,193),  'B9B19F', (970,199),  'AFA18D', (933,215),  'B9B19F'), #ok
+        '鑽石隊員': Triple_Pixel_Info((912,211), 'C3EDCC', (956,195), 'EFE9F1', (966,212), '9FB4CB'), #ok
+        '新隊員提示': Triple_Pixel_Info((963,233), "FFFFFF", (907,235), "FFFFFF", (957,245), "FFFFFF"),#ok
+        'skip畫面': Triple_Pixel_Info((1589,935),  '00C1FF', (1591,999),  '0095CF', (1763,977),  '00ACE8'),  #ok
+        'VPN': Triple_Pixel_Info((232, 133), '2155FA', (232, 124), '2155FA', (240, 123), '2155FA'),  #ok
+        'VPN背景': Triple_Pixel_Info((555, 111),  '889600', (685, 115),  '889600', (933, 124),  '889600'),  #ok
+        'VPN正常': Triple_Pixel_Info((149,116), 'FFFFFF', (148,131), '889600', (132,136), 'FFFFFF')
+    }
+else:
+    with open(CONFIG, 'r', encoding='utf8') as f:
+        d = json.load(f)
+    COLOR_MAP = {key : Triple_Pixel_Info.to_obj(d[key]) for key in d}
 
 
 class Check_Pixel_Info:
@@ -204,7 +228,7 @@ def corruptRecovery(need_reboot=False):
 
     if need_reboot:
         send_command(Commands.App.System.reboot)
-        delay(7000)
+        delay(10000)
         adb_ready()
         check_Pixel_Info.update_window()
         
