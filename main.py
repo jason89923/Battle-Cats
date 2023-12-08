@@ -6,6 +6,7 @@ import argparse
 import json
 import threading
 import discord
+from discord.ext import commands
 import asyncio
 from datetime import datetime
 import os
@@ -18,16 +19,16 @@ CHANNEL = {'一號機': 1181625760222543883, '二號機': 1182266933018628136, '
 
 
 
-intents = discord.Intents.default()
-client = discord.Client(intents=intents)
+intents = discord.Intents.all()
+intents.messages = True  # 啟用消息內容意圖
+client = commands.Bot(command_prefix='..', intents=intents)
 
 async def monitor_event_and_send_message(channel):
-    await channel.send(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - {CURRENT_CHANNEL}已就緒")
     # 監控邏輯
     while not client.is_closed():
         if condition_is_met():
-            await channel.send(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} - {CURRENT_CHANNEL}超過 4 分鐘沒有回應，腳本已暫停執行')
-            await client.close()
+            await channel.send(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} {CURRENT_CHANNEL}超過 4 分鐘沒有回應，腳本已暫停執行')
+            client.close()
             os._exit(0)
         await asyncio.sleep(20)
 
@@ -41,6 +42,11 @@ async def on_ready():
     print(f'Logged in as {client.user}')
     channel = client.get_channel(CHANNEL[CURRENT_CHANNEL])  # 用實際的頻道 ID 替換
     client.loop.create_task(monitor_event_and_send_message(channel))
+    
+@client.command()
+async def s(ctx):
+    if ctx.channel.id == CHANNEL[CURRENT_CHANNEL]:
+        await ctx.send(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}\n{CURRENT_CHANNEL}狀態\n已成功執行了 {counter} 次\n距離上次成功經過 {round((time.time()-last_success_time), 1)} 秒')
 
 
 def start():
@@ -78,7 +84,7 @@ def send_command(command=[], preDelay=0):
         # 構建設置日期和時間的命令
         adb_date_cmd = [ADB_TOOL_PATH, "-s", f"{TAG}", *command]
         # 執行命令
-        subprocess.run(adb_date_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=1)
+        subprocess.run(adb_date_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=3)
     except Exception as e:
         corruptRecovery(need_reboot=True)
         
