@@ -8,6 +8,7 @@ import threading
 import discord
 import asyncio
 from datetime import datetime
+import os
 
 
 TOKEN = ""
@@ -25,8 +26,10 @@ async def monitor_event_and_send_message(channel):
     # 監控邏輯
     while not client.is_closed():
         if condition_is_met():
-            await channel.send(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} - {CURRENT_CHANNEL}超過 4 分鐘沒有回應，請盡快處理')
-        await asyncio.sleep(240)
+            await channel.send(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} - {CURRENT_CHANNEL}超過 4 分鐘沒有回應，腳本已暫停執行')
+            await client.close()
+            os._exit(0)
+        await asyncio.sleep(20)
 
 def condition_is_met():
     if time.time() - last_success_time > 240:
