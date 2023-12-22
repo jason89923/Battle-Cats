@@ -27,13 +27,13 @@ async def monitor_event_and_send_message(channel):
     # 監控邏輯
     while not client.is_closed():
         if condition_is_met():
-            await channel.send(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} {CURRENT_CHANNEL}超過 4 分鐘沒有回應，腳本已暫停執行')
-            client.close()
+            await channel.send(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} {CURRENT_CHANNEL}超過 6 分鐘沒有回應，腳本已暫停執行')
+            await client.close()
             os._exit(0)
         await asyncio.sleep(20)
 
 def condition_is_met():
-    if time.time() - last_success_time > 240:
+    if time.time() - last_success_time > 360:
         return True
     return False
 
@@ -61,10 +61,11 @@ bot_thread.start()
 
 
 argparser = argparse.ArgumentParser()
-argparser.add_argument('-p', '--port', type=str, default='5556')
+argparser.add_argument('-p', '--port', type=str, default='5560')
 argparser.add_argument('-w', '--window', type=str, default='jason')
 argparser.add_argument('-t', '--threshold', type=int, default=5)
 argparser.add_argument('-c', '--config', type=str, default='')
+argparser.add_argument('-b', '--buycatnip', type=int, default=500)
 
 ADB_TOOL_PATH = "adb"
 TAG = f'emulator-{argparser.parse_args().port}'
@@ -72,6 +73,7 @@ WINDOW_NAME = argparser.parse_args().window
 # 0(白) ~ 4(傳說)，小於給定等級就會馬上被踢，5表示啟用隨到隨踢功能
 member_level_threshold = argparser.parse_args().threshold
 CONFIG = argparser.parse_args().config
+BUYCATNIP = argparser.parse_args().buycatnip
 
 
 def delay(milliseconds):
@@ -153,6 +155,9 @@ class Cat(App_base):
         # 還沒弄
         self._click_map['新隊員'] = (83, 591) # ok
         self._click_map['skip'] = (1417, 821) # ok
+        self._click_map['神社'] = (345, 415)
+        self._click_map['100萬'] = (658, 580)
+        self._click_map['返回'] = (83, 819)
 
 
 class VPN(App_base):
@@ -245,7 +250,8 @@ if CONFIG == '':
         'skip畫面': Triple_Pixel_Info((1589,935),  '00C1FF', (1591,999),  '0095CF', (1763,977),  '00ACE8'),  #ok
         'VPN': Triple_Pixel_Info((232, 133), '2155FA', (232, 124), '2155FA', (240, 123), '2155FA'),  #ok
         'VPN背景': Triple_Pixel_Info((555, 111),  '889600', (685, 115),  '889600', (933, 124),  '889600'),  #ok
-        'VPN正常': Triple_Pixel_Info((149,116), 'FFFFFF', (148,131), '889600', (132,136), 'FFFFFF')
+        'VPN正常': Triple_Pixel_Info((149,116), 'FFFFFF', (148,131), '889600', (132,136), 'FFFFFF'),
+        '神社彈窗': Triple_Pixel_Info((747,618), '00BDFA', (913,622), '00BBF7', (905,642), '00AFEB')
     }
 else:
     with open(CONFIG, 'r', encoding='utf8') as f:
@@ -282,7 +288,7 @@ def corruptRecovery(need_reboot=False):
 
     if need_reboot:
         send_command(Commands.App.System.reboot)
-        delay(10000)
+        delay(15000)
         adb_ready()
         check_Pixel_Info.update_window()
         
@@ -305,7 +311,7 @@ def corruptRecovery(need_reboot=False):
     i = 0
     while check_Pixel_Info.check('skip畫面', 10):
         i = i + 1
-        if i == 700:
+        if i == 1500:
             raise Exception('corrupt recovery')
 
     send_command(Commands.App.CAT.click('skip'))  # 點擊skip
@@ -389,11 +395,39 @@ def keepLargest():
             return
     raise Exception('kick off')
 
+def shrine(reset=True):
+    if reset:
+        send_command(Commands.App.CAT.click('返回'), 400)
+        if check_Pixel_Info.check_response('加碼多多圖示'):
+            return
+        send_command(Commands.App.CAT.click('進入加碼多多'), 400)
+        delay(500)
+    for _ in range(5):
+        i = 0
+        # 如果還沒看到神社彈窗，就一直點神社
+        while check_Pixel_Info.check('神社彈窗', 100):
+            send_command(Commands.App.CAT.click('神社'))
+            i += 1
+            if i > 30:
+                return
+            
+        i = 0
+        
+        for __ in range(2):
+            send_command(Commands.App.CAT.click('100萬'), 400)
+        
+        # 如果還沒回到加碼多多頁面，就一直點空白
+        while check_Pixel_Info.check('加碼多多鈴鐺', 100):
+            send_command(Commands.App.CAT.click('空白'))
+            i += 1
+            if i > 30:
+                return
+
 
 if __name__ == '__main__':
     adb_ready()
     error = False
-    counter = 0
+    counter = 1
     start_time = time.time()
     while True:
         try:
@@ -494,6 +528,11 @@ if __name__ == '__main__':
             elif is_new_member:
                 for i in range(10):
                     send_command(Commands.App.CAT.click('空白'))  # 點空白
+            
+            # 用經驗換貓薄荷
+            if counter % BUYCATNIP == 0:
+                shrine()
+                
         except Exception as e:
             if e.args[0] != 'keep going':
                 error = True
