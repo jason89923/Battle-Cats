@@ -21,7 +21,7 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 TOKEN = config.get('Secret', 'TOKEN')
-CHANNEL = {'一號機': config.get('Secret', 'channel_1'), '二號機': config.get('Secret', 'channel_2'), '三號機': config.get('Secret', 'channel_3')}
+CHANNEL = {'一號機':int(config.get('Secret', 'channel_1')), '二號機': int(config.get('Secret', 'channel_2')), '三號機': int(config.get('Secret', 'channel_3'))}
 
 CURRENT_CHANNEL = '二號機'
 
