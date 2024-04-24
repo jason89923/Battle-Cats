@@ -1,3 +1,7 @@
+import os
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+
 import subprocess
 import time
 import win32gui
@@ -9,25 +13,36 @@ import discord
 from discord.ext import commands
 import asyncio
 from datetime import datetime
-import os
+import cal_can
+import configparser
 
 
-TOKEN = ""
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+TOKEN = config.get('Secret', 'TOKEN')
+CHANNEL = {'一號機': config.get('Secret', 'channel_1'), '二號機': config.get('Secret', 'channel_2'), '三號機': config.get('Secret', 'channel_3')}
 
 CURRENT_CHANNEL = '二號機'
-CHANNEL = {}
-
 
 
 intents = discord.Intents.all()
 intents.messages = True  # 啟用消息內容意圖
 client = commands.Bot(command_prefix='..', intents=intents)
 
+num_of_can = 0
+num_of_new_can = 0
+can_per_hour = 0
+
 async def monitor_event_and_send_message(channel):
     # 監控邏輯
     while not client.is_closed():
         if condition_is_met():
             await channel.send(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} {CURRENT_CHANNEL}超過 6 分鐘沒有回應，腳本已暫停執行')
+            await client.close()
+            os._exit(0)
+        if num_of_can > 45000:
+            await channel.send(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} {CURRENT_CHANNEL}罐頭數量超過 45000，腳本已暫停執行')
             await client.close()
             os._exit(0)
         await asyncio.sleep(20)
@@ -46,7 +61,8 @@ async def on_ready():
 @client.command()
 async def s(ctx):
     if ctx.channel.id == CHANNEL[CURRENT_CHANNEL]:
-        await ctx.send(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}\n{CURRENT_CHANNEL}狀態\n已成功執行了 {counter} 次\n距離上次成功經過 {round((time.time()-last_success_time), 1)} 秒')
+        await ctx.send(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}\n{CURRENT_CHANNEL}狀態\n目前罐頭數量：{num_of_can}\n新增罐頭數量：{num_of_new_can}\nCPH：{can_per_hour:.1f}\
+            \n已成功執行了 {counter} 次\n距離上次成功經過 {round((time.time()-last_success_time), 1)} 秒')
 
 
 def start():
@@ -59,13 +75,12 @@ bot_thread = threading.Thread(target=start)
 bot_thread.daemon = True  # 将线程设置为守护线程
 bot_thread.start()
 
-
 argparser = argparse.ArgumentParser()
 argparser.add_argument('-p', '--port', type=str, default='5554')
 argparser.add_argument('-w', '--window', type=str, default='jason')
 argparser.add_argument('-t', '--threshold', type=int, default=5)
 argparser.add_argument('-c', '--config', type=str, default='')
-argparser.add_argument('-b', '--buycatnip', type=int, default=200)
+argparser.add_argument('-b', '--buycatnip', type=int, default=300)
 
 ADB_TOOL_PATH = "adb"
 TAG = f'emulator-{argparser.parse_args().port}'
@@ -75,6 +90,7 @@ member_level_threshold = argparser.parse_args().threshold
 CONFIG = argparser.parse_args().config
 BUYCATNIP = argparser.parse_args().buycatnip
 
+COMMAND_TIMEOUT = int(config.get('env', 'command_timeout'))
 
 def delay(milliseconds):
     time.sleep(milliseconds/1000)
@@ -462,13 +478,27 @@ if __name__ == '__main__':
     adb_ready()
     error = False
     counter = 1
+    init_time = time.time()
+    init_can = None
     start_time = time.time()
     first_time = True
     while True:
         try:
+            
             if first_time:
                 first_time = False
                 corruptRecovery()
+            
+            num_of_can = cal_can.detect_can()
+            if init_can is None and num_of_can != 0:
+                init_can = num_of_can
+                
+            # 計算每個小時新增的罐頭數量
+            if init_can is not None and num_of_can != 0:
+                num_of_new_can = num_of_can - init_can
+                can_per_hour = (num_of_new_can) / ((time.time() - init_time) / 3600)
+            print(f'目前罐頭數量：{num_of_can} 新增罐頭數量：{num_of_new_can} CPH：{can_per_hour:.1f}')
+            
             
             skip = False
             if check_Pixel_Info.check_response('加碼多多鈴鐺'):  # 判斷是否在加碼多多的畫面(換裝)
